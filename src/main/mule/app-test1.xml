@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2623a759-cc4c-4037-b387-e24248145e10" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<api-gateway:autodiscovery apiId="16435682" doc:name="API Autodiscovery" doc:id="c8d1fbf5-682d-4888-bc07-cdf5b0080ea8" flowRef="app-test1Flow" />
+	<flow name="app-test1Flow" doc:id="5daf6f20-be92-4168-b821-c17debfbb336" >
+		<http:listener doc:name="Listener" doc:id="dee080ad-9bd4-40f1-8cc2-0b4d385a4313" config-ref="HTTP_Listener_config" path="/test1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e8023888-f0ba-4009-8b55-f8a7e0da560f" message="#[payload]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="c64d3949-ff63-4636-bc95-1900bc069322" name="app-test1Sub_Flow"/>
+		<set-payload value='#[payload]' doc:name="Set Payload" doc:id="60f36911-14f4-496b-a0f3-c4b479e0b477" />
+		<ee:transform doc:name="Transform Message" doc:id="d9b3216d-e795-4bb2-b399-e10233d79dc4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+"testcase" ++ "giving the test"
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="app-test1Sub_Flow" doc:id="1dd64858-ea5e-4ce7-b4fe-0044f952840a" />
+	<flow name="app-test1Flow1" doc:id="21f41031-f4af-47bc-bc8c-fe99a052ed0c" />
+</mule>
